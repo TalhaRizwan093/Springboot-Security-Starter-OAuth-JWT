@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css?family=Dosis:300");
+
+:root {
+  --gray: #27282d;
+  --medium-gray: #3f4045;
+  --light-gray: #b0b0b5;
+  --gradient: linear-gradient(
+    140deg,
+    rgb(219, 98, 65) 0%,
+    rgb(229, 91, 141) 100%
+  );
+}
+
+body {
+  background-image: var(--gradient);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.App {
+  background: var(--gray);
+  height: 400px; /* Adjusted height */
+  width: 520px;
+  margin: 0 auto;
+  border-radius: 5px;
+  box-shadow: 0px 4px 30px -5px rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 20px;
+  width: 340px;
+}
+
+input,
+button {
+  font-family: "Dosis", sans-serif;
+  letter-spacing: 1.3px;
+}
+
+input {
+  box-sizing: border-box;
+  background: transparent;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--medium-gray);
+  color: var(--light-gray);
+  padding: 12px 6px 12px 36px;
+  font-size: 19px;
+  outline: none;
+  caret-color: rgb(229, 91, 141);
+}
+
+input:focus {
+  border-bottom: 1px solid transparent;
+  border-image: var(--gradient);
+  border-image-slice: 1;
+}
+
+input:focus + i {
+  color: var(--light-gray);
+}
+
+::placeholder {
+  color: var(--light-gray);
+  opacity: 0.4;
+}
+
+i {
+  color: var(--medium-gray);
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: color 0.3s;
+}
+
+button {
+  background: #313238;
+  border: none;
+  border-radius: 30px;
+  color: var(--light-gray);
+  font-size: 16px;
+  padding: 16px 36px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px; /* Adjusted margin */
+  box-shadow: 0px 4px 15px -5px rgba(0, 0, 0, 0.65);
+}
+
+button:hover {
+  background: #393a41;
+  box-shadow: 0px 5px 20px -3px rgba(0, 0, 0, 0.65);
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin-top: 10px; /* Adjusted margin */
+}
+
+.social-button {
+  background: #313238;
+  border: none;
+  border-radius: 30px;
+  color: var(--light-gray);
+  font-size: 16px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.social-button:hover {
+  background: #393a41;
+  box-shadow: 0px 5px 20px -3px rgba(0, 0, 0, 0.65);
+}
+
+@media screen and (max-width: 620px) {
+  .App {
+    min-height: 300px;
+    max-height: 420px;
+    width: 90vw;
+  }
+
+  .input-container {
+    width: 80%;
+    margin-bottom: 20px;
+  }
+
+  button {
+    margin-top: 10px;
+  }
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
