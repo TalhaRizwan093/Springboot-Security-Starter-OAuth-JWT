@@ -60,6 +60,7 @@ public class SecurityConfig {
         return new UserInfoUserDetailsService();
     }
 
+    //Security Filter chain: Contains policies for all the security
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenService, userInfoUserDetailsService);
