@@ -5,6 +5,7 @@ import com.spring.OAuthSecurity.filtter.JwtAuthenticationFilter;
 import com.spring.OAuthSecurity.handler.CustomAuthenticationFailureHandler;
 import com.spring.OAuthSecurity.handler.OAuth2LoginSuccessHandler;
 import com.spring.OAuthSecurity.handler.UsernamePasswordSuccessHandler;
+import com.spring.OAuthSecurity.repository.HttpCookieOAuth2AutherizationRequestRepository;
 import com.spring.OAuthSecurity.repository.RoleRepository;
 import com.spring.OAuthSecurity.repository.UserInfoRepository;
 import com.spring.OAuthSecurity.service.JwtTokenService;
@@ -47,17 +48,14 @@ public class SecurityConfig {
     private final UserInfoUserDetailsService userInfoUserDetailsService;
     private final UserInfoRepository userInfoRepository;
     private final RoleRepository roleRepository;
+    private final HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository;
 
-    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoUserDetailsService userInfoUserDetailsService, UserInfoRepository userInfoRepository, RoleRepository roleRepository) {
+    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoUserDetailsService userInfoUserDetailsService, UserInfoRepository userInfoRepository, RoleRepository roleRepository, HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository) {
         this.jwtTokenService = jwtTokenService;
         this.userInfoUserDetailsService = userInfoUserDetailsService;
         this.userInfoRepository = userInfoRepository;
         this.roleRepository = roleRepository;
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(){
-        return new UserInfoUserDetailsService();
+        this.httpCookieOAuth2AutherizationRequestRepository = httpCookieOAuth2AutherizationRequestRepository;
     }
 
     @Bean
@@ -73,11 +71,17 @@ public class SecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oAuth2UserService())
+                        .authorizationEndpoint(authEndpoint ->
+                                authEndpoint
+                                        .authorizationRequestRepository(httpCookieOAuth2AutherizationRequestRepository))
+                        .redirectionEndpoint(redirect ->
+                                redirect
+                                        .baseUri("/login/oauth2/code/*"))
+                        .userInfoEndpoint(userInfo ->
+                                userInfo
+                                        .userService(oAuth2UserService())
                         )
-                        .successHandler(new OAuth2LoginSuccessHandler(jwtTokenService, userInfoRepository))
-
+                        .successHandler(new OAuth2LoginSuccessHandler(jwtTokenService, userInfoRepository, httpCookieOAuth2AutherizationRequestRepository))
                 )
                 .formLogin(formLogin -> formLogin.successHandler(new UsernamePasswordSuccessHandler(jwtTokenService, userInfoRepository))
                         .failureHandler(new CustomAuthenticationFailureHandler()))
@@ -88,20 +92,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
-        configuration.setExposedHeaders(Arrays.asList("Authorization"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public UserDetailsService userDetailsService() {
+        return new UserInfoUserDetailsService();
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
+    public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
@@ -114,7 +110,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -127,5 +123,18 @@ public class SecurityConfig {
     public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService() {
         return new OAuthUserService(userInfoRepository, roleRepository);
     }
+
+    //    @Bean
+    //    CorsConfigurationSource corsConfigurationSource() {
+    //        CorsConfiguration configuration = new CorsConfiguration();
+    //        configuration.setAllowCredentials(true);
+    //        configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:5173"));
+    //        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    //        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+    //        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+    //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //        source.registerCorsConfiguration("/**", configuration);
+    //        return source;
+    //    }
 
 }

@@ -20,11 +20,5 @@ public class AuthController {
         return userService.authenticate(loginRequest);
     }
 
-    @GetMapping("/auth/code/google")
-    public ResponseEntity<?> redirector(@RequestBody LoginRequest loginRequest){
-        var test = 1;
-        return ResponseEntity.ok().body("Hello");
-    }
-
 }
 

@@ -25,7 +25,7 @@ function Login() {
   };
 
   const handleGoogleLogin = async () => {
-    window.location.href = `http://localhost:8080/oauth2/authorization/google`;
+    window.location.href = `http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:5173`;
   };
 
   const handleGithubLogin = () => {
