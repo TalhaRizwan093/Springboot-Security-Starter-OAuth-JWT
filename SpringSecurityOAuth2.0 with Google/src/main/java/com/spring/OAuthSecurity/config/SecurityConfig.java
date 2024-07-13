@@ -58,6 +58,7 @@ public class SecurityConfig {
         this.httpCookieOAuth2AutherizationRequestRepository = httpCookieOAuth2AutherizationRequestRepository;
     }
 
+    //Security Filter chain: Contains policies for all the security
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenService, userInfoUserDetailsService);

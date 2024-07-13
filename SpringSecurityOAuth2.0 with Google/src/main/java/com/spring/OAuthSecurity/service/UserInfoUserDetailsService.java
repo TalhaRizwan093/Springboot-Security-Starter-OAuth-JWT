@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Optional;
 
+//This class maps the user info from our db to the user details which is the object stored in spring security.
 @Service
 public class UserInfoUserDetailsService implements UserDetailsService {
 
