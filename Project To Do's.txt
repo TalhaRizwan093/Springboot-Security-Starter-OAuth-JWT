@@ -10,3 +10,5 @@ Things to do with the spring security backend project.
 6. Make Readme file
 	- Add explaination of the project
 	- Add Project setup guide.
+7. Add refresh token capabilities.
+7. Revamp the frontend to make the project useful.
