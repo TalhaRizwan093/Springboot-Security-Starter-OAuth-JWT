@@ -1,9 +1,7 @@
 package com.spring.OAuthSecurity.service;
 
 import com.spring.OAuthSecurity.model.Role;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -60,8 +58,18 @@ public class JwtTokenService {
     }
 
     public boolean validateToken(String token) {
-        Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-        return true;
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (SignatureException ex) {
+            throw new SignatureException("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            throw new MalformedJwtException("Invalid JWT token");
+        } catch (UnsupportedJwtException ex) {
+            throw new UnsupportedJwtException("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("JWT claims string is empty");
+        }
     }
 
     public String getUsername(String token) {

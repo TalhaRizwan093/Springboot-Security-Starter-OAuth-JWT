@@ -2,12 +2,11 @@ package com.spring.OAuthSecurity.config;
 
 
 import com.spring.OAuthSecurity.filtter.JwtAuthenticationFilter;
-import com.spring.OAuthSecurity.handler.CustomAuthenticationFailureHandler;
 import com.spring.OAuthSecurity.handler.OAuth2LoginSuccessHandler;
-import com.spring.OAuthSecurity.handler.UsernamePasswordSuccessHandler;
 import com.spring.OAuthSecurity.repository.HttpCookieOAuth2AutherizationRequestRepository;
 import com.spring.OAuthSecurity.repository.RoleRepository;
 import com.spring.OAuthSecurity.repository.UserInfoRepository;
+import com.spring.OAuthSecurity.security.RestAuthenticationEntryPoint;
 import com.spring.OAuthSecurity.service.JwtTokenService;
 import com.spring.OAuthSecurity.service.OAuthUserService;
 import com.spring.OAuthSecurity.service.UserInfoUserDetailsService;
@@ -33,11 +32,6 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
 
 
 @Configuration
@@ -49,26 +43,33 @@ public class SecurityConfig {
     private final UserInfoRepository userInfoRepository;
     private final RoleRepository roleRepository;
     private final HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository;
+    private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoUserDetailsService userInfoUserDetailsService, UserInfoRepository userInfoRepository, RoleRepository roleRepository, HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository) {
+    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoUserDetailsService userInfoUserDetailsService, UserInfoRepository userInfoRepository, RoleRepository roleRepository, HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository, UserDetailsService userDetailsService) {
         this.jwtTokenService = jwtTokenService;
         this.userInfoUserDetailsService = userInfoUserDetailsService;
         this.userInfoRepository = userInfoRepository;
         this.roleRepository = roleRepository;
         this.httpCookieOAuth2AutherizationRequestRepository = httpCookieOAuth2AutherizationRequestRepository;
+        this.restAuthenticationEntryPoint = new RestAuthenticationEntryPoint();
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtTokenService, userDetailsService);
     }
 
     //Security Filter chain: Contains policies for all the security
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtTokenService, userInfoUserDetailsService);
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/auth/**", "/error").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -84,23 +85,18 @@ public class SecurityConfig {
                         )
                         .successHandler(new OAuth2LoginSuccessHandler(jwtTokenService, userInfoRepository, httpCookieOAuth2AutherizationRequestRepository))
                 )
-                .formLogin(formLogin -> formLogin.successHandler(new UsernamePasswordSuccessHandler(jwtTokenService, userInfoRepository))
-                        .failureHandler(new CustomAuthenticationFailureHandler()))
-                .authenticationProvider(authenticationProvider())
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserInfoUserDetailsService();
     }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setUserDetailsService(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
