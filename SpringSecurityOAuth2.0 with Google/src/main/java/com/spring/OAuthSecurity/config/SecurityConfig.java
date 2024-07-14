@@ -2,15 +2,14 @@ package com.spring.OAuthSecurity.config;
 
 
 import com.spring.OAuthSecurity.filtter.JwtAuthenticationFilter;
-import com.spring.OAuthSecurity.handler.OAuth2LoginSuccessHandler;
-import com.spring.OAuthSecurity.repository.HttpCookieOAuth2AutherizationRequestRepository;
+import com.spring.OAuthSecurity.security.handler.CustomAccessDeniedHandler;
+import com.spring.OAuthSecurity.security.handler.OAuth2LoginSuccessHandler;
+import com.spring.OAuthSecurity.security.HttpCookieOAuth2AutherizationRequestRepository;
 import com.spring.OAuthSecurity.repository.RoleRepository;
 import com.spring.OAuthSecurity.repository.UserInfoRepository;
 import com.spring.OAuthSecurity.security.RestAuthenticationEntryPoint;
 import com.spring.OAuthSecurity.service.JwtTokenService;
 import com.spring.OAuthSecurity.service.OAuthUserService;
-import com.spring.OAuthSecurity.service.UserInfoUserDetailsService;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,14 +44,16 @@ public class SecurityConfig {
     private final HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoRepository userInfoRepository, RoleRepository roleRepository, HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository, UserDetailsService userDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
+    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoRepository userInfoRepository, RoleRepository roleRepository, HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository, UserDetailsService userDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.jwtTokenService = jwtTokenService;
         this.userInfoRepository = userInfoRepository;
         this.roleRepository = roleRepository;
         this.httpCookieOAuth2AutherizationRequestRepository = httpCookieOAuth2AutherizationRequestRepository;
         this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -84,7 +85,8 @@ public class SecurityConfig {
                         )
                         .successHandler(new OAuth2LoginSuccessHandler(jwtTokenService, userInfoRepository, httpCookieOAuth2AutherizationRequestRepository))
                 )
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint))
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(restAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -120,6 +122,7 @@ public class SecurityConfig {
         return new OAuthUserService(userInfoRepository, roleRepository);
     }
 
+    //Instead of using WEBMVC cors you can use this cors configurations also
     //    @Bean
     //    CorsConfigurationSource corsConfigurationSource() {
     //        CorsConfiguration configuration = new CorsConfiguration();

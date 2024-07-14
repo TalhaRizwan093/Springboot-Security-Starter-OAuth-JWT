@@ -1,8 +1,8 @@
-package com.spring.OAuthSecurity.handler;
+package com.spring.OAuthSecurity.security.handler;
 
 import com.spring.OAuthSecurity.model.Role;
 import com.spring.OAuthSecurity.model.UserInfo;
-import com.spring.OAuthSecurity.repository.HttpCookieOAuth2AutherizationRequestRepository;
+import com.spring.OAuthSecurity.security.HttpCookieOAuth2AutherizationRequestRepository;
 import com.spring.OAuthSecurity.repository.UserInfoRepository;
 import com.spring.OAuthSecurity.service.JwtTokenService;
 import com.spring.OAuthSecurity.utils.CookieUtils;
@@ -11,7 +11,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

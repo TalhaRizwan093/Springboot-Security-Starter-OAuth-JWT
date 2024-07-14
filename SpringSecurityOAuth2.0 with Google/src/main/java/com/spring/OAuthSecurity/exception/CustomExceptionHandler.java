@@ -10,12 +10,16 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.nio.file.AccessDeniedException;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -107,4 +111,26 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(ErrorResponse
                 .create(ex, HttpStatus.UNAUTHORIZED, message), HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(HttpClientErrorException.Forbidden.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(Exception ex) {
+        String message = messageSource.getMessage("forbidden.exception", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+        return new ResponseEntity<>(ErrorResponse
+                .create(ex, HttpStatus.UNAUTHORIZED, message), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(Exception ex) {
+        String message = messageSource.getMessage("access.denied.exception", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+        return new ResponseEntity<>(ErrorResponse
+                .create(ex, HttpStatus.UNAUTHORIZED, message), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(Exception ex) {
+        String message = messageSource.getMessage("authorization.denied.exception", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+        return new ResponseEntity<>(ErrorResponse
+                .create(ex, HttpStatus.UNAUTHORIZED, message), HttpStatus.UNAUTHORIZED);
+    }
+
 }
