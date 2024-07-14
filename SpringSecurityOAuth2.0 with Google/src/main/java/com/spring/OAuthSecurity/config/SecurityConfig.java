@@ -10,6 +10,7 @@ import com.spring.OAuthSecurity.security.RestAuthenticationEntryPoint;
 import com.spring.OAuthSecurity.service.JwtTokenService;
 import com.spring.OAuthSecurity.service.OAuthUserService;
 import com.spring.OAuthSecurity.service.UserInfoUserDetailsService;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,12 +46,12 @@ public class SecurityConfig {
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoRepository userInfoRepository, RoleRepository roleRepository, HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository, UserDetailsService userDetailsService) {
+    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoRepository userInfoRepository, RoleRepository roleRepository, HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository, UserDetailsService userDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
         this.jwtTokenService = jwtTokenService;
         this.userInfoRepository = userInfoRepository;
         this.roleRepository = roleRepository;
         this.httpCookieOAuth2AutherizationRequestRepository = httpCookieOAuth2AutherizationRequestRepository;
-        this.restAuthenticationEntryPoint = new RestAuthenticationEntryPoint();
+        this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
         this.userDetailsService = userDetailsService;
     }
 

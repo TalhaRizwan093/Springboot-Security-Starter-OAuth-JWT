@@ -22,17 +22,17 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    @Autowired
-    UserInfoRepository userInfoRepository;
+    final UserInfoRepository userInfoRepository;
+    final PasswordEncoder passwordEncoder;
+    final JwtTokenService jwtService;
+    final AuthenticationManager authenticationManager;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    JwtTokenService jwtService;
-
-    @Autowired
-    AuthenticationManager authenticationManager;
+    public UserService(AuthenticationManager authenticationManager, JwtTokenService jwtService, PasswordEncoder passwordEncoder, UserInfoRepository userInfoRepository) {
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
+        this.userInfoRepository = userInfoRepository;
+    }
 
     public String addUser(UserInfo userInfo){
         userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));

@@ -68,6 +68,8 @@ public class JwtTokenService {
             throw new MalformedJwtException("Invalid JWT token");
         } catch (UnsupportedJwtException ex) {
             throw new UnsupportedJwtException("Unsupported JWT token");
+        } catch(ExpiredJwtException ex){
+            throw new ExpiredJwtException(ex.getHeader(), ex.getClaims(), "The Token Provided is Expired");
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("JWT claims string is empty");
         }

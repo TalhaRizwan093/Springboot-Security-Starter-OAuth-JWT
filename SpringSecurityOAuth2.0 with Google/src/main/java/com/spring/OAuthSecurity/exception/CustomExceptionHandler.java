@@ -1,6 +1,7 @@
 package com.spring.OAuthSecurity.exception;
 
 import com.spring.OAuthSecurity.exception.User.UserNotFoundException;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -9,6 +10,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -38,11 +40,21 @@ public class CustomExceptionHandler {
                 .create(ex, HttpStatus.UNAUTHORIZED, message), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(MalformedJwtException.class)
-    public ResponseEntity<ErrorResponse> handleMalformedJwtException(MalformedJwtException ex) {
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException ex) {
         String message = messageSource.getMessage("jwt.expired.exception", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
         return new ResponseEntity<>(ErrorResponse
-                .create(ex, HttpStatus.BAD_REQUEST, message), HttpStatus.BAD_REQUEST);
+                .create(ex, HttpStatus.UNAUTHORIZED, message), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<ErrorResponse> handleMalformedJwtException(MalformedJwtException ex) {
+        String message = messageSource.getMessage("jwt.malformed.exception", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+        return new ResponseEntity<>(ErrorResponse
+                .builder(ex, HttpStatus.BAD_REQUEST, message)
+                .title("JWT Exception")
+                .build()
+                , HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnsupportedJwtException.class)
@@ -85,6 +97,13 @@ public class CustomExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public  ResponseEntity<ErrorResponse> onBadCredentialsException(BadCredentialsException ex){
         String message = messageSource.getMessage("auth.credentials.exception", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+        return new ResponseEntity<>(ErrorResponse
+                .create(ex, HttpStatus.UNAUTHORIZED, message), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(Exception ex) {
+        String message = messageSource.getMessage("authentication.exception", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
         return new ResponseEntity<>(ErrorResponse
                 .create(ex, HttpStatus.UNAUTHORIZED, message), HttpStatus.UNAUTHORIZED);
     }
