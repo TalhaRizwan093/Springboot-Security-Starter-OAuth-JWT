@@ -4,6 +4,7 @@ import com.spring.OAuthSecurity.model.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,7 +62,7 @@ public class JwtTokenService {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
-        } catch (SignatureException ex) {
+        } catch (io.jsonwebtoken.security.SignatureException ex) {
             throw new SignatureException("Invalid JWT signature");
         } catch (MalformedJwtException ex) {
             throw new MalformedJwtException("Invalid JWT token");

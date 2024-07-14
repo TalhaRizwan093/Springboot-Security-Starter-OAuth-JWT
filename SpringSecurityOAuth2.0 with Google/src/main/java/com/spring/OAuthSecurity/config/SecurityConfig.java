@@ -39,16 +39,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
     private final JwtTokenService jwtTokenService;
-    private final UserInfoUserDetailsService userInfoUserDetailsService;
     private final UserInfoRepository userInfoRepository;
     private final RoleRepository roleRepository;
     private final HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoUserDetailsService userInfoUserDetailsService, UserInfoRepository userInfoRepository, RoleRepository roleRepository, HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository, UserDetailsService userDetailsService) {
+    public SecurityConfig(JwtTokenService jwtTokenService, UserInfoRepository userInfoRepository, RoleRepository roleRepository, HttpCookieOAuth2AutherizationRequestRepository httpCookieOAuth2AutherizationRequestRepository, UserDetailsService userDetailsService) {
         this.jwtTokenService = jwtTokenService;
-        this.userInfoUserDetailsService = userInfoUserDetailsService;
         this.userInfoRepository = userInfoRepository;
         this.roleRepository = roleRepository;
         this.httpCookieOAuth2AutherizationRequestRepository = httpCookieOAuth2AutherizationRequestRepository;
