@@ -1,6 +1,6 @@
 package com.spring.OAuthSecurity.controller;
 
-import com.spring.OAuthSecurity.exception.User.UserNotFoundException;
+import com.spring.OAuthSecurity.exception.user.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;

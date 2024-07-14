@@ -1,6 +1,6 @@
 package com.spring.OAuthSecurity.exception;
 
-import com.spring.OAuthSecurity.exception.User.UserNotFoundException;
+import com.spring.OAuthSecurity.exception.user.UserNotFoundException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
