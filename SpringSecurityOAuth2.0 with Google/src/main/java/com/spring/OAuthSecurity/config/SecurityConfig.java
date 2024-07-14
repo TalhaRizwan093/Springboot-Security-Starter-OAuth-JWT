@@ -1,7 +1,7 @@
 package com.spring.OAuthSecurity.config;
 
 
-import com.spring.OAuthSecurity.filtter.JwtAuthenticationFilter;
+import com.spring.OAuthSecurity.security.filtter.JwtAuthenticationFilter;
 import com.spring.OAuthSecurity.security.handler.CustomAccessDeniedHandler;
 import com.spring.OAuthSecurity.security.handler.OAuth2LoginSuccessHandler;
 import com.spring.OAuthSecurity.security.HttpCookieOAuth2AutherizationRequestRepository;

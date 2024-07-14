@@ -1,4 +1,4 @@
-package com.spring.OAuthSecurity.filtter;
+package com.spring.OAuthSecurity.security.filtter;
 
 import com.spring.OAuthSecurity.service.JwtTokenService;
 import io.jsonwebtoken.MalformedJwtException;
