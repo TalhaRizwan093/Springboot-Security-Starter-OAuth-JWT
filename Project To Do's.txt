@@ -1,14 +1,15 @@
 Things to do with the spring security backend project.
 
 1. Add cookies util to save the redirectt uri and after the auth request redirectin to it. (done)
-2. Add exception handling.
-3. Follow springboot best practices.
+2. Add exception handling. (done)
+3. Add Singup flow and role updation api.
+4. Follow springboot best practices.
 	- Add app properties of prod, staging, dev.
 	- Add excptions messages in saperate file.
-4. Add Mappers for easy mapping from DTOs -> Models and Models -> DTOs.
-5. Put logging with Aspect oriented approach.
-6. Make Readme file
+5. Add Mappers for easy mapping from DTOs -> Models and Models -> DTOs.
+6. Put logging with Aspect oriented approach.
+7. Make Readme file
 	- Add explaination of the project
 	- Add Project setup guide.
-7. Add refresh token capabilities.
-7. Revamp the frontend to make the project useful.
+8. Add refresh token capabilities.
+9. Revamp the frontend to make the project useful.
