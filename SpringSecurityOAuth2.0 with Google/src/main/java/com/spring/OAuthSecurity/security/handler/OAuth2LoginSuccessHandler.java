@@ -1,8 +1,8 @@
 package com.spring.OAuthSecurity.security.handler;
 
-import com.spring.OAuthSecurity.model.Role;
+import com.spring.OAuthSecurity.model.UserRole;
 import com.spring.OAuthSecurity.model.UserInfo;
-import com.spring.OAuthSecurity.security.HttpCookieOAuth2AutherizationRequestRepository;
+import com.spring.OAuthSecurity.security.oauth2.HttpCookieOAuth2AutherizationRequestRepository;
 import com.spring.OAuthSecurity.repository.UserInfoRepository;
 import com.spring.OAuthSecurity.service.JwtTokenService;
 import com.spring.OAuthSecurity.utils.CookieUtils;
@@ -47,10 +47,10 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String email = user.getAttribute("email");
 
         UserInfo savedUser = userInfoRepository.findByEmail(email).orElse(null);
-        List<Role> roles = savedUser != null ? savedUser.getRoles() : null;
+        List<UserRole> userRoles = savedUser != null ? savedUser.getUserRoles() : null;
 
-        Collection<? extends GrantedAuthority> authorities = roles != null ? roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
+        Collection<? extends GrantedAuthority> authorities = userRoles != null ? userRoles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRole().getRole()))
                 .toList() : null;
 
         String token = jwtTokenService.createToken(email, authorities);

@@ -1,6 +1,5 @@
 package com.spring.OAuthSecurity.service;
 
-import com.spring.OAuthSecurity.model.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

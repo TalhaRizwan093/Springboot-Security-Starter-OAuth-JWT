@@ -9,8 +9,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,8 +25,8 @@ public class UserInfoUserDetails implements UserDetails {
     public UserInfoUserDetails(UserInfo userInfo) {
         this.username = userInfo.getEmail();
         this.password = userInfo.getPassword();
-        this.authorities = userInfo.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
+        this.authorities = userInfo.getUserRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getRole().getRole()))
                 .collect(Collectors.toList());
     }
 }

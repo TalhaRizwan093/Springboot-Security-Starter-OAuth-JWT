@@ -1,4 +1,4 @@
-package com.spring.OAuthSecurity.security;
+package com.spring.OAuthSecurity.security.oauth2;
 
 import com.spring.OAuthSecurity.utils.CookieUtils;
 import jakarta.servlet.http.HttpServletRequest;
