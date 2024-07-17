@@ -21,7 +21,7 @@ In this section we will dive deep into the springboot security and go through th
 
 Here is the detailed and indepth view of the JWT authentication flow.
 
-(Figure goes here)
+![JWT Auth Flow](https://github.com/user-attachments/assets/56c19c34-ac95-4d24-b9f6-38bbfba88ac8)
 
 ### Custom Login Flow
 
