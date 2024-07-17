@@ -58,7 +58,7 @@ Here is the detailed and indepth view of the Custome login flow.
     - And after that successhandler will generate the JWT token, take out the redirect_uri from the cookies and redirect the user to the url specifiec in redirect_url.
 Here is the detailed and indepth view of OAuth2 Login flow.
 
-(gifure goes here)
+(figure goes here)
 
 
 
