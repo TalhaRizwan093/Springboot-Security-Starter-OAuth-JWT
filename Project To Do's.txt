@@ -11,6 +11,6 @@ Things to do with the spring security backend project.
 7. Put logging with Aspect oriented approach (Maybe Later).
 8. Make Readme file
 	- Add explaination of the project
-	- Add Project setup guide.
+	- Add Project setup guide. (Done)
 9. Add refresh token capabilities.
 10. Revamp the frontend to make the project useful.
