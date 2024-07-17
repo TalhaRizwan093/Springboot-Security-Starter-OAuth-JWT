@@ -64,7 +64,6 @@ Access the frontend to start using the proejct
 For support, email talharizwan.me@gmail.com \
 If you like and using this project please donot Forget to Star it as it means alot to me.
 
-
 ## Authors
 
 - [@TalhaRizwan093](https://www.github.com/TalhaRizwan093)
