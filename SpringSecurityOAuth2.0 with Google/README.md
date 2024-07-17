@@ -38,7 +38,7 @@ Here is the detailed and indepth view of the JWT authentication flow.
     - If in some case the authentication is failed a BadCredentialsException will be thrown which will be handled by the RestControllerAdvice.
 Here is the detailed and indepth view of the Custome login flow.
 
-
+![Custom Login Flow](https://github.com/user-attachments/assets/0ff9c8f7-6730-4fa2-b3e5-a356dbd932a5)
 
 ### OAuth2 Login
 - To login using OAuth2 we have to hit a specific url for the respective autherization servers like for google we will call.
