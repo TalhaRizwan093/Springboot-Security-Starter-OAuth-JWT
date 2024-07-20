@@ -101,14 +101,9 @@ public class OAuthUserService implements OAuth2UserService<OAuth2UserRequest, OA
     }
 
     private void setRoles(UserInfo user) {
-        Role userRole = roleService.getRoleByName(Enums.RoleType.ROLE_USER);
-        List<UserRole> userRoles = new ArrayList<>();
-        UserRole userRoleAssociation = new UserRole();
-        userRoleAssociation.setUserInfo(user);
-        userRoleAssociation.setRole(userRole);
-        userRoles.add(userRoleAssociation);
-
-        user.setUserRoles(userRoles);
+        List<Role> userRoles =  new ArrayList<>();
+        userRoles.add(roleService.getRoleByName(Enums.RoleType.ROLE_USER));
+        roleService.giveRolesToUser(user, userRoles);
     }
 
 }

@@ -12,16 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthController {
 
-    final UserService userService;
 
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @PostMapping("/auth/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
-        return userService.authenticate(loginRequest);
-    }
 
 }
 
