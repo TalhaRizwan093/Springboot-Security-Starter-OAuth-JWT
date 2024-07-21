@@ -4,8 +4,10 @@ import com.spring.OAuthSecurity.dto.LoginRequest;
 import com.spring.OAuthSecurity.dto.SignupRequest;
 import com.spring.OAuthSecurity.exception.user.UserNotFoundException;
 import com.spring.OAuthSecurity.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +26,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<?> login(@RequestBody SignupRequest signupRequest){
+    public ResponseEntity<?> login(@Valid @RequestBody SignupRequest signupRequest){
         return userService.register(signupRequest);
     }
 
@@ -32,10 +34,7 @@ public class UserController {
     @GetMapping("/user/exception")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> testUserException() {
-        if(true){
-            throw new UserNotFoundException("User");
-        }
-        return ResponseEntity.ok().build();
+        throw new UserNotFoundException("User");
     }
 
 }

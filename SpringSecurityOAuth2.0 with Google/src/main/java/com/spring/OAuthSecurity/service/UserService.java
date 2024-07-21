@@ -39,16 +39,15 @@ public class UserService {
     final JwtTokenService jwtService;
     final AuthenticationManager authenticationManager;
     final RoleService roleService;
+    final UserMapper mapper;
 
-//    @Autowired
-//    public UserMapper mapper;
-
-    public UserService(AuthenticationManager authenticationManager, JwtTokenService jwtService, PasswordEncoder passwordEncoder, UserInfoRepository userInfoRepository, RoleService roleService) {
+    public UserService(AuthenticationManager authenticationManager, JwtTokenService jwtService, PasswordEncoder passwordEncoder, UserInfoRepository userInfoRepository, RoleService roleService, UserMapper mapper) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.userInfoRepository = userInfoRepository;
         this.roleService = roleService;
+        this.mapper = mapper;
     }
 
     public ResponseEntity<?> authenticate(LoginRequest loginRequest) {
@@ -69,11 +68,16 @@ public class UserService {
 
     public ResponseEntity<?> register(SignupRequest signupRequest) {
         try{
-//            UserInfo user = mapper.singupRequestDtoToUserInfo(signupRequest);
-//            List<Role> roles = new ArrayList<>();
-//            roles.add(roleService.getRoleByName(Enums.RoleType.ROLE_USER));
-//            roleService.giveRolesToUser(user, roles);
-//            userInfoRepository.save(user);
+            UserInfo user = mapper.singupRequestDtoToUserInfo(signupRequest);
+            user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+            user.setProvider(Enums.AuthProvider.local);
+            user.setProviderId("LOCAL");
+            user.setEmailVerified(false);
+            user.setImageUrl(null);
+            List<Role> roles = new ArrayList<>();
+            roles.add(roleService.getRoleByName(Enums.RoleType.ROLE_USER));
+            roleService.giveRolesToUser(user, roles);
+            userInfoRepository.save(user);
             return ResponseEntity.ok().body("Registration Successful");
 
         }catch (Exception e){

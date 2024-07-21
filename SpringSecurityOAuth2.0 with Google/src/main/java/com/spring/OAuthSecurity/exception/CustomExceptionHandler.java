@@ -1,6 +1,8 @@
 package com.spring.OAuthSecurity.exception;
 
+import com.spring.OAuthSecurity.dto.CustomErrorResponse;
 import com.spring.OAuthSecurity.exception.user.UserNotFoundException;
+import com.spring.OAuthSecurity.exception.user.UserRegistrationException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
@@ -8,18 +10,25 @@ import io.jsonwebtoken.security.SignatureException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -28,6 +37,39 @@ public class CustomExceptionHandler {
 
     public CustomExceptionHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
+    }
+
+    @ExceptionHandler(HttpMessageConversionException.class)
+    public ResponseEntity<CustomErrorResponse> handleHttpMessageConversionException(HttpMessageConversionException ex) {
+        Map<String, String> errors = new HashMap<>();
+        String message = messageSource.getMessage("api.body.missing", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, message);
+        CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST, problemDetail, errors, "REQUEST_BODY_NOT_FOUND");
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach(error -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        String message = messageSource.getMessage("api.param.missing", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, message);
+
+        CustomErrorResponse errorResponse = new CustomErrorResponse(HttpStatus.BAD_REQUEST, problemDetail, errors, "ARGUMENT_NOT_VALID");
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserRegistrationException.class)
+    public ResponseEntity<ErrorResponse> handleUserRegistrationException(UserRegistrationException ex) {
+        String message = messageSource.getMessage("api.user.registration", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+        return new ResponseEntity<>(ErrorResponse
+                .create(ex, HttpStatus.BAD_REQUEST, message), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
