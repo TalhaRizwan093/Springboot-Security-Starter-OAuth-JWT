@@ -6,8 +6,9 @@
       <list>
         <option value="$PROJECT_DIR$/Spring Security JWT/pom.xml" />
         <option value="$PROJECT_DIR$/SpringSecurityOAuth2.0 with Google/pom.xml" />
+        <option value="$PROJECT_DIR$/Backend/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_19" default="true" project-jdk-name="19" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK" />
 </project>
