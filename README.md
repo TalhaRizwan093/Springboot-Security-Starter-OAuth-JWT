@@ -62,7 +62,7 @@ Access the frontend to start using the proejct
 ## Regards
 
 For support, email talharizwan.me@gmail.com \
-If you like and using this project please donot Forget to Star it as it means alot to me.
+If you like and using this project please donot Forget to Star it as it means alot to me. Thanks. 
 
 ## Authors
 
