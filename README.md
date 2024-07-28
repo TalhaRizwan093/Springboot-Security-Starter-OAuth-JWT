@@ -1,5 +1,5 @@
 
-# React + Spring Boot Authentication Application
+# React + Spring Boot Authentication Application/Starter
 #### Production Ready Spring Security for your new Project 🚀
 This Project is a goto for your new enterprise level application based on springboot (Production ready framework of Java) with best practices followed. The authentication is based on **OAuth2** for authentication and **JWT** for authorization. There is a username password authentication flow as well login with google and github flow with a modulerized approach of adding any other OAuth2 authorization server like facebook etc.
 
@@ -62,7 +62,7 @@ Access the frontend to start using the proejct
 ## Regards
 
 For support, email talharizwan.me@gmail.com \
-If you like and using this project please donot Forget to Star it as it means alot to me.
+If you like and using this project please donot Forget to Star it as it means alot to me. Thanks. 
 
 ## Authors
 

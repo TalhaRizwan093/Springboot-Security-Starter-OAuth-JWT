@@ -62,4 +62,5 @@ In this section we will dive deep into the springboot security and go through th
 
 (figure goes here)
 
-<!--- Eraser file: https://app.eraser.io/workspace/Prz1GDHbwnuTr6ZLoqto --->
+### Note
+Please note that the above knowladge is what I have understood from the official SpringSecurity Documentation. Please for more and better understanding refer to [SpringSecurity](https://docs.spring.io/spring-security/reference/index.html)

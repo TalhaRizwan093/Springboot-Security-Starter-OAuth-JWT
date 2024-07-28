@@ -31,17 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-
-### Application Properties ###
-# For Spring Boot applications
-application.properties
-application.yml
-
-# For other configurations (if applicable)
-config/application.properties
-config/application.yml
-
-# For environment-specific properties
-application-*.properties
-application-*.yml
