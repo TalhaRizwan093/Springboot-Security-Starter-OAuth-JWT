@@ -1,4 +1,7 @@
-import React, { FC } from "react";
+"use client";
+
+import React, { FC, useRef, useState } from "react";
+import axios, { AxiosError } from "axios";
 import facebookSvg from "@/images/Facebook.svg";
 import twitterSvg from "@/images/Twitter.svg";
 import googleSvg from "@/images/Google.svg";
@@ -6,6 +9,7 @@ import Input from "@/shared/Input/Input";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 const loginSocials = [
   {
@@ -26,6 +30,34 @@ const loginSocials = [
 ];
 
 const PageLogin = () => {
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const [token, setToken] = useState<string | null>(null);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const email = emailRef.current?.value;
+    const password = passwordRef.current?.value;
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/v1/auth/login",
+        {
+          email: email,
+          password: password,
+        }
+      );
+      localStorage.setItem("token", response.data);
+      setToken(response.data);
+    } catch (error: any) {
+      toast.error(error.response.data.body.detail, {
+        position: "top-right",
+        id: "nc-product-notify",
+        duration: 3000,
+      });
+    }
+  };
+
   return (
     <div className={`nc-PageLogin`} data-nc-id="PageLogin">
       <div className="container mb-24 lg:mb-32">
@@ -60,12 +92,18 @@ const PageLogin = () => {
             <div className="absolute left-0 w-full top-1/2 transform -translate-y-1/2 border border-neutral-100 dark:border-neutral-800"></div>
           </div>
           {/* FORM */}
-          <form className="grid grid-cols-1 gap-6" action="#" method="post">
+          <form
+            className="grid grid-cols-1 gap-6"
+            onSubmit={(e) => handleLogin(e)}
+            action="#"
+            method="post"
+          >
             <label className="block">
               <span className="text-neutral-800 dark:text-neutral-200">
                 Email address
               </span>
               <Input
+                ref={emailRef}
                 type="email"
                 placeholder="example@example.com"
                 className="mt-1"
@@ -78,7 +116,7 @@ const PageLogin = () => {
                   Forgot password?
                 </Link>
               </span>
-              <Input type="password" className="mt-1" />
+              <Input ref={passwordRef} type="password" className="mt-1" />
             </label>
             <ButtonPrimary type="submit">Continue</ButtonPrimary>
           </form>

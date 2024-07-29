@@ -1,10 +1,12 @@
 "use client";
 
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Logo from "@/shared/Logo/Logo";
 import AvatarDropdown from "./AvatarDropdown";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
+import SwitchDarkMode from "@/shared/SwitchDarkMode/SwitchDarkMode";
+import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 
 export interface MainNav2Props {
   className?: string;
@@ -12,7 +14,14 @@ export interface MainNav2Props {
 
 const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
   const [showSearchForm, setShowSearchForm] = useState(false);
+  const [showAwatarDropDown, setShowAwatarDropDown] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setShowAwatarDropDown(true);
+    }
+  }, []);
 
   const renderMagnifyingGlassIcon = () => {
     return (
@@ -47,7 +56,7 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
         className="flex-1 py-2 text-slate-900 dark:text-slate-100"
         onSubmit={(e) => {
           e.preventDefault();
-          router.push("/search");
+          // router.push("/search");
         }}
       >
         <div className="bg-slate-50 dark:bg-slate-800 flex items-center space-x-1.5 px-5 h-full rounded">
@@ -89,8 +98,12 @@ const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
                 {renderMagnifyingGlassIcon()}
               </button>
             )}
-
-            <AvatarDropdown />
+            <SwitchDarkMode />
+            {showAwatarDropDown ? (
+              <AvatarDropdown />
+            ) : (
+              <ButtonPrimary href="/login">Login</ButtonPrimary>
+            )}
           </div>
         </div>
       </div>
