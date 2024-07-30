@@ -7,21 +7,26 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import SwitchDarkMode from "@/shared/SwitchDarkMode/SwitchDarkMode";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
+import { useSelector } from "react-redux";
 
 export interface MainNav2Props {
   className?: string;
 }
 
 const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
+  const token = useSelector((state) => state.auth);
   const [showSearchForm, setShowSearchForm] = useState(false);
   const [showAwatarDropDown, setShowAwatarDropDown] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    console.log(token);
+    if (token.token !== null) {
       setShowAwatarDropDown(true);
+    } else {
+      setShowAwatarDropDown(false);
     }
-  }, []);
+  }, [token]);
 
   const renderMagnifyingGlassIcon = () => {
     return (

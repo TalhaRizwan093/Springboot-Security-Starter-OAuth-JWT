@@ -10,6 +10,8 @@ import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { useSelector, useDispatch } from "react-redux";
+import { addAuth } from "@/redux/slice/authSlice";
 
 const loginSocials = [
   {
@@ -30,6 +32,8 @@ const loginSocials = [
 ];
 
 const PageLogin = () => {
+  const dispatch = useDispatch();
+
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -47,6 +51,7 @@ const PageLogin = () => {
           password: password,
         }
       );
+      dispatch(addAuth(response.data));
       localStorage.setItem("token", response.data);
       setToken(response.data);
     } catch (error: any) {
