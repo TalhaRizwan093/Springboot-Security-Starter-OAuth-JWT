@@ -55,11 +55,19 @@ const PageLogin = () => {
       localStorage.setItem("token", response.data);
       setToken(response.data);
     } catch (error: any) {
-      toast.error(error.response.data.body.detail, {
-        position: "top-right",
-        id: "nc-product-notify",
-        duration: 3000,
-      });
+      if (error.code == "ERR_NETWORK") {
+        toast.error("Servers are currently offline", {
+          position: "top-right",
+          id: "nc-product-notify",
+          duration: 3000,
+        });
+      } else {
+        toast.error(error.response.data.body.detail, {
+          position: "top-right",
+          id: "nc-product-notify",
+          duration: 3000,
+        });
+      }
     }
   };
 
