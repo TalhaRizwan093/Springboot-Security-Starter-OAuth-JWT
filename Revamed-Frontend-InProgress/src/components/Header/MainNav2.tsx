@@ -8,19 +8,18 @@ import { useRouter } from "next/navigation";
 import SwitchDarkMode from "@/shared/SwitchDarkMode/SwitchDarkMode";
 import ButtonPrimary from "@/shared/Button/ButtonPrimary";
 import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 export interface MainNav2Props {
   className?: string;
 }
 
 const MainNav2: FC<MainNav2Props> = ({ className = "" }) => {
-  const token = useSelector((state) => state.auth);
+  const token = useSelector((state: RootState) => state.auth);
   const [showSearchForm, setShowSearchForm] = useState(false);
   const [showAwatarDropDown, setShowAwatarDropDown] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
-    console.log(token);
     if (token.token !== null) {
       setShowAwatarDropDown(true);
     } else {

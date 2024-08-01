@@ -1,6 +1,7 @@
 package com.spring.OAuthSecurity.exception;
 
 import com.spring.OAuthSecurity.dto.CustomErrorResponse;
+import com.spring.OAuthSecurity.exception.user.DuplicateUserException;
 import com.spring.OAuthSecurity.exception.user.UserNotFoundException;
 import com.spring.OAuthSecurity.exception.user.UserRegistrationException;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -68,6 +69,13 @@ public class CustomExceptionHandler {
     @ExceptionHandler(UserRegistrationException.class)
     public ResponseEntity<ErrorResponse> handleUserRegistrationException(UserRegistrationException ex) {
         String message = messageSource.getMessage("api.user.registration", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
+        return new ResponseEntity<>(ErrorResponse
+                .create(ex, HttpStatus.BAD_REQUEST, message), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateUserException(DuplicateUserException ex) {
+        String message = messageSource.getMessage("api.user.registration.duplicate", new Object[]{ex.getMessage()}, LocaleContextHolder.getLocale());
         return new ResponseEntity<>(ErrorResponse
                 .create(ex, HttpStatus.BAD_REQUEST, message), HttpStatus.BAD_REQUEST);
     }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import axios, { AxiosError } from "axios";
 import facebookSvg from "@/images/Facebook.svg";
 import twitterSvg from "@/images/Twitter.svg";
@@ -12,6 +12,8 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { useSelector, useDispatch } from "react-redux";
 import { addAuth } from "@/redux/slice/authSlice";
+import { useRouter } from "next/navigation";
+import type { RootState } from "@/redux/store";
 
 const loginSocials = [
   {
@@ -26,17 +28,24 @@ const loginSocials = [
   },
   {
     name: "Continue with Google",
-    href: "#",
+    href: "http://localhost:8080/oauth2/authorization/google?redirect_uri=http://localhost:3000",
     icon: googleSvg,
   },
 ];
 
 const PageLogin = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
+  const token = useSelector((state: RootState) => state.auth);
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (token.token !== null) {
+      router.push("/");
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,7 +62,7 @@ const PageLogin = () => {
       );
       dispatch(addAuth(response.data));
       localStorage.setItem("token", response.data);
-      setToken(response.data);
+      router.push("/");
     } catch (error: any) {
       if (error.code == "ERR_NETWORK") {
         toast.error("Servers are currently offline", {
