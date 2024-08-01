@@ -7,10 +7,10 @@ Things to do with the spring security backend project.
 5. Follow springboot best practices.
 	- Add app properties of prod, staging, dev.
 	- Add excptions messages in saperate file (Mostly done).
-6. Add Mappers for easy mapping from DTOs -> Models and Models -> DTOs.
+6. Add Mappers for easy mapping from DTOs -> Models and Models -> DTOs. (Done)
 7. Put logging with Aspect oriented approach (Maybe Later).
 8. Make Readme file
-	- Add explaination of the project
+	- Add explaination of the project (Done)
 	- Add Project setup guide. (Done)
-9. Add refresh token capabilities.
-10. Revamp the frontend to make the project useful.
+9. Add refresh token capabilities. (Potponed)
+10. Revamp the frontend to make the project useful. (Done)
