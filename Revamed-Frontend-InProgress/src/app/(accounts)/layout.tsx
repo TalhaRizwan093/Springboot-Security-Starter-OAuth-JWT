@@ -1,10 +1,12 @@
 "use client";
-
 import { Route } from "@/routers/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
-import { FC } from "react";
+import { FC, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 
 export interface CommonLayoutProps {
   children?: React.ReactNode;
@@ -25,7 +27,15 @@ const pages: {
 ];
 
 const CommonLayout: FC<CommonLayoutProps> = ({ children }) => {
+  const router = useRouter();
   const pathname = usePathname();
+  const token = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (token.token === null) {
+      router.push("/");
+    }
+  }, [token]);
 
   return (
     <div className="nc-AccountCommonLayout container">

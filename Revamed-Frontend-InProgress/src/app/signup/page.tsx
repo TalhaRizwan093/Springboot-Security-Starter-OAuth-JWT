@@ -45,7 +45,7 @@ const PageSignUp = () => {
     if (token.token !== null) {
       router.push("/");
     }
-  }, []);
+  }, [token]);
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
