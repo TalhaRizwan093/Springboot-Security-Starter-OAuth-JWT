@@ -2,6 +2,7 @@ package com.spring.OAuthSecurity.service;
 
 import com.spring.OAuthSecurity.dto.LoginRequest;
 import com.spring.OAuthSecurity.dto.SignupRequest;
+import com.spring.OAuthSecurity.exception.user.DuplicateUserException;
 import com.spring.OAuthSecurity.exception.user.UserRegistrationException;
 import com.spring.OAuthSecurity.mapper.UserMapper;
 import com.spring.OAuthSecurity.model.Role;
@@ -12,6 +13,7 @@ import com.spring.OAuthSecurity.utils.Enums;
 import jakarta.transaction.Transactional;
 import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -70,6 +72,8 @@ public class UserService {
         try{
             UserInfo user = mapper.singupRequestDtoToUserInfo(signupRequest);
             user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
+            user.setEmail(signupRequest.getEmail());
+            user.setName(signupRequest.getName());
             user.setProvider(Enums.AuthProvider.local);
             user.setProviderId("LOCAL");
             user.setEmailVerified(false);
@@ -80,7 +84,10 @@ public class UserService {
             userInfoRepository.save(user);
             return ResponseEntity.ok().body("Registration Successful");
 
-        }catch (Exception e){
+        }catch (DataIntegrityViolationException e){
+            throw new DuplicateUserException("Invalid Registration Request");
+        }
+        catch (Exception e){
             throw new UserRegistrationException("Invalid Registration Request");
         }
     }
